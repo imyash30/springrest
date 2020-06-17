@@ -96,6 +96,16 @@ public class UserService {
 		List<UserDto> userDtoList = modelMapper.map(userList, new TypeToken<List<UserDto>>() {}.getType());
 		return userDtoList;
 	}
+
+	public UserDto getUserById(Long userId) throws ResourceNotFoundException {
+		// TODO Auto-generated method stub
+		User user = userDao.findById(userId)
+			       .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
+		
+		UserDto userDto = modelMapper.map(user, new TypeToken<UserDto>() {}.getType());
+		
+		return userDto;
+	}
 	
 
 }

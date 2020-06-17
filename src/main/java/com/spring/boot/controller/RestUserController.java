@@ -1,7 +1,5 @@
 package com.spring.boot.controller;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +59,11 @@ public class RestUserController {
 		return ResponseEntity.ok(updatedUser);
 	}
 
+	@GetMapping("/getUserById/{id}")
+	public UserDto getUserById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+		return userService.getUserById(userId);
+	}
+
 	@DeleteMapping("/deleteUser/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException{
 		Map<String,Object> response = new HashMap<>();
@@ -85,7 +88,6 @@ public class RestUserController {
 	public List<UserDto> getAllUserByDobSorting(){
 		
 		List<UserDto> userList= userService.getAllUserByDobSorting();
-		
 		return userList;
 	}
 

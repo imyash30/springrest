@@ -59,7 +59,7 @@ public class RestUserControllerTests {
 	
 	@Test
 	void testUpdateUser() throws Exception {
-		String requestBody = "{\"firstName\":\"Rohit\",\"lastName\":\"Bhosale\",\"gender\":\"Male\",\"age\":\"24\",\"email\":\"rohit@gmail.com\",\"mobile\":\"1234567890\",\"address\":\"vashi\",\"dateOfBirth\":\"1995-03-30\",\"dateOfJoining\":\"2018-07-16\",\"pincode\":\"400001\"}";
+		String requestBody = "{\"firstName\":\"Rohit\",\"lastName\":\"Bhosale\",\"gender\":\"Male\",\"age\":\"26\",\"email\":\"rohit@gmail.com\",\"mobile\":\"1234567890\",\"address\":\"vashi\",\"dateOfBirth\":\"1995-03-30\",\"dateOfJoining\":\"2018-07-16\",\"pincode\":\"400001\"}";
 		
 		mockMvc.perform(MockMvcRequestBuilders.put("/updateUser/4")
 				.contentType(MediaType.APPLICATION_JSON).content(requestBody).accept(MediaType.APPLICATION_JSON))
@@ -88,6 +88,17 @@ public class RestUserControllerTests {
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.*", hasSize(4)))
+				.andDo(print());
+	}
+	
+	@Test
+	void testGetUserById() throws Exception {
+
+		mockMvc.perform(MockMvcRequestBuilders.get("/getUserById/1")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.firstName", "Yash").exists())
+		        .andExpect(jsonPath("$.lastName", "Dixit").exists())
 				.andDo(print());
 	}
 
