@@ -250,9 +250,9 @@ public class MTUserService {
 		// TODO Auto-generated method stub
 		List<UserDetails> userDetailsList = new ArrayList<UserDetails>();
 		StringBuilder sbquery = new StringBuilder();
-		
-		sbquery.append("select * from user_details ");
 		if(searchDtoList.size() > 0) {
+			sbquery.append("select * from user_details ");
+		
 			sbquery.append("where ");
 			for(SearchDto sdto : searchDtoList) {
 				if(sdto.getKey().equalsIgnoreCase("firstname"))
@@ -264,11 +264,12 @@ public class MTUserService {
 				if(sdto.getKey().equalsIgnoreCase("pincode"))
 					sbquery.append("pincode = '"+sdto.getValue()+"' and ");
 			}
+			String finalQuery = sbquery.substring(0, sbquery.length() - 4);
+			
+			Query query = entityManager.createNativeQuery(finalQuery,UserDetails.class);
+			userDetailsList.addAll(query.getResultList());
 		}
-		String finalQuery = sbquery.substring(0, sbquery.length() - 4);
 		
-		Query query = entityManager.createNativeQuery(finalQuery,UserDetails.class);
-		userDetailsList.addAll(query.getResultList());
 		return userDetailsList;
 	}
 
