@@ -2,12 +2,15 @@ package com.spring.boot.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
@@ -19,6 +22,7 @@ import com.spring.boot.dao.MTUserDao;
 import com.spring.boot.dao.UserDetailsDao;
 import com.spring.boot.dao.UserEducationDao;
 import com.spring.boot.dao.UserEmployementDao;
+import com.spring.boot.dto.SearchDto;
 import com.spring.boot.dto.UserDetailsDto;
 import com.spring.boot.dto.UserDto;
 import com.spring.boot.entity.MTUser;
@@ -44,6 +48,9 @@ public class MTUserService {
 	
 	@Autowired
 	ModelMapper modelMapper;
+	
+	@Autowired
+	EntityManager entityManager;
 
 	public boolean saveUser(@Valid UserDto userDto) throws Exception {
 		// TODO Auto-generated method stub
@@ -237,6 +244,32 @@ public class MTUserService {
 		});
 		
 		return userEmpDetails;
+	}
+
+	public List<UserDetails> getDetailsByDynemicSeach(List<SearchDto> searchDtoList) {
+		// TODO Auto-generated method stub
+		List<UserDetails> userDetailsList = new ArrayList<UserDetails>();
+		StringBuilder sbquery = new StringBuilder();
+		
+		sbquery.append("select * from user_details ");
+		if(searchDtoList.size() > 0) {
+			sbquery.append("where ");
+			for(SearchDto sdto : searchDtoList) {
+				if(sdto.getKey().equalsIgnoreCase("firstname"))
+					sbquery.append("first_name = '"+sdto.getValue()+"' and ");
+				if(sdto.getKey().equalsIgnoreCase("lastname"))
+					sbquery.append("last_name = '"+sdto.getValue()+"' and ");
+				if(sdto.getKey().equalsIgnoreCase("address"))
+					sbquery.append("address = '"+sdto.getValue()+"' and ");
+				if(sdto.getKey().equalsIgnoreCase("pincode"))
+					sbquery.append("pincode = '"+sdto.getValue()+"' and ");
+			}
+		}
+		String finalQuery = sbquery.substring(0, sbquery.length() - 4);
+		
+		Query query = entityManager.createNativeQuery(finalQuery,UserDetails.class);
+		userDetailsList.addAll(query.getResultList());
+		return userDetailsList;
 	}
 
 }

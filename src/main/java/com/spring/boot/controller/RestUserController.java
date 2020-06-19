@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.spring.boot.dto.SearchDto;
 import com.spring.boot.dto.UserDetailsDto;
 import com.spring.boot.dto.UserDto;
 import com.spring.boot.entity.MTUser;
@@ -155,6 +156,12 @@ public class RestUserController {
 	public List<UserEmployementDetails> getAllUserByDojSorting(){
 		logger.info("Fetching user employement info by sorting doj");
 		List<UserEmployementDetails> userList= mtUserService.getAllUserByDojSorting();
+		return userList;
+	}
+	
+	@PostMapping("/getDetailsByDynemicSeach")
+	public List<UserDetails> getDetailsByDynemicSeach(@RequestBody List<SearchDto> searchDtoList){
+		List<UserDetails> userList= mtUserService.getDetailsByDynemicSeach(searchDtoList);
 		return userList;
 	}
 	
