@@ -1,18 +1,43 @@
 package com.spring.boot.dto;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class UserDto {
 	
 	private String id;
+	
+	private String userName;
+	
+	@Pattern(regexp="^(?=.*\\d)(?=.*[A-Z]).{6,8}$",message="Enter min 6 to max 8 character, 1 capital,1 number, No special char.")
+	private String password;
+	
 	private String firstName;
+	
 	private String lastName;
+	
 	private String email;
+	
+	@Size(message="required")
 	private String gender;
+	
 	private String age;
+	
 	private String address;
+	
+	@Size(min=10,max=10,message="10 digits required")
 	private String mobile;
 	private String dateOfBirth;
-	private String dateOfJoining;
 	private String pincode;
+	private String qualification;
+	private String passedYear;
+	private String certification;
+	private String companyName;
+	private String designation;
+	private String dateOfJoining;
+	private String yearsOfExp;
+	private String technologyName;
+	private String salary;
 	
 	public String getId() {
 		return id;
@@ -79,6 +104,66 @@ public class UserDto {
 	}
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getQualification() {
+		return qualification;
+	}
+	public void setQualification(String qualification) {
+		this.qualification = qualification;
+	}
+	public String getPassedYear() {
+		return passedYear;
+	}
+	public void setPassedYear(String passedYear) {
+		this.passedYear = passedYear;
+	}
+	public String getCertification() {
+		return certification;
+	}
+	public void setCertification(String certification) {
+		this.certification = certification;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+	public String getDesignation() {
+		return designation;
+	}
+	public void setDesignation(String designation) {
+		this.designation = designation;
+	}
+	public String getYearsOfExp() {
+		return yearsOfExp;
+	}
+	public void setYearsOfExp(String yearsOfExp) {
+		this.yearsOfExp = yearsOfExp;
+	}
+	public String getTechnologyName() {
+		return technologyName;
+	}
+	public void setTechnologyName(String technologyName) {
+		this.technologyName = technologyName;
+	}
+	public String getSalary() {
+		return salary;
+	}
+	public void setSalary(String salary) {
+		this.salary = salary;
 	}
 	
 	
