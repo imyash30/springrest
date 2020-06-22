@@ -48,6 +48,22 @@ public class UserEmployementDetails extends BaseEntity{
 	@JoinColumn(name="mt_user_id",referencedColumnName="id")
 	private MTUser mtUser;
 	
+	
+	
+	public UserEmployementDetails() {
+		super();
+	}
+	public UserEmployementDetails(String companyName, String designation, Date dateOfJoining, int yearsOfExp,
+			String technologyName, double salary, MTUser mtUser) {
+		super();
+		this.companyName = companyName;
+		this.designation = designation;
+		this.dateOfJoining = dateOfJoining;
+		this.yearsOfExp = yearsOfExp;
+		this.technologyName = technologyName;
+		this.salary = salary;
+		this.mtUser = mtUser;
+	}
 	public String getCompanyName() {
 		return companyName;
 	}

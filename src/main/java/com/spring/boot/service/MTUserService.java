@@ -114,7 +114,7 @@ public class MTUserService {
 		return userDtoList;
 	}
 
-	public UserDetailsDto updateUserDetails(Long userId, @Valid UserDetailsDto userDto) throws ParseException {
+	public UserDetailsDto updateUserDetails(Long userId, @Valid UserDetailsDto userDto) throws ParseException, ResourceNotFoundException {
 		// TODO Auto-generated method stub
 		UserDetails userDetails = userDetailsDao.getUserDetailsById(userId);
 		if(userDetails != null) {
@@ -136,8 +136,8 @@ public class MTUserService {
 			
 			return userDto;
 		}else {
-			new ResourceNotFoundException("User not found on :: " + userId);
-			return null;
+			throw new ResourceNotFoundException("User not found on :: " + userId);
+//			return null;
 		}
 	}
 
@@ -246,7 +246,7 @@ public class MTUserService {
 		return userEmpDetails;
 	}
 
-	public List<UserDetails> getDetailsByDynemicSeach(List<SearchDto> searchDtoList) {
+	public List<UserDetails> getDetailsByDynamicSearch(List<SearchDto> searchDtoList) {
 		// TODO Auto-generated method stub
 		List<UserDetails> userDetailsList = new ArrayList<UserDetails>();
 		StringBuilder sbquery = new StringBuilder();

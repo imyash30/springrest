@@ -1,4 +1,4 @@
-package com.spring.boot.service;
+/*package com.spring.boot.service;
 
 import java.util.List;
 
@@ -59,3 +59,4 @@ public class UserEducationService {
 	}
 
 }
+*/

@@ -14,6 +14,26 @@ public class UserDetailsDto {
 	private String address;
 	private String dateOfBirth;
 	private String pincode;
+	
+	
+	
+	public UserDetailsDto() {
+		super();
+	}
+	public UserDetailsDto(String id, String firstName, String lastName, String gender, String age, String email,
+			String mobile, String address, String dateOfBirth, String pincode) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.gender = gender;
+		this.age = age;
+		this.email = email;
+		this.mobile = mobile;
+		this.address = address;
+		this.dateOfBirth = dateOfBirth;
+		this.pincode = pincode;
+	}
 	public String getId() {
 		return id;
 	}

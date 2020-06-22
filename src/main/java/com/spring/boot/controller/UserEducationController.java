@@ -1,4 +1,4 @@
-package com.spring.boot.controller;
+/*package com.spring.boot.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,3 +56,4 @@ public class UserEducationController {
 	}
 
 }
+*/

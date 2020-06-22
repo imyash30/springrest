@@ -30,7 +30,7 @@ public class RestUserControllerTests {
 	@Test
 	void testGetAllUsers() throws Exception {
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/getAllUsers")
+		mockMvc.perform(MockMvcRequestBuilders.get("/getAllUsersDetails")
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.*", hasSize(4)))
@@ -39,33 +39,43 @@ public class RestUserControllerTests {
 	
 	@Test
 	void testCreateUser() throws Exception {
-		String requestBody = "{\"firstName\":\"Rohit\",\"lastName\":\"bhosale\",\"gender\":\"Male\",\"age\":\"24\",\"email\":\"rohit@gmail.com\",\"mobile\":\"123456789\",\"address\":\"vashi\",\"dateOfBirth\":\"1995-03-30\",\"dateOfJoining\":\"2018-07-16\",\"pincode\":\"400001\"}";
+		String requestBody = "{\"userName\":\"pawan07\",\"password\":\"Pawan07\",\"firstName\":\"Pawan\",\"lastName\":\"Shah\",\"gender\":\"Male\",\"age\":\"24\",\"email\":\"pawan@gmail.com\",\"mobile\":\"1234567890\",\"address\":\"Bhayander\",\"dateOfBirth\":\"07/11/1996\",\"pincode\":\"400001\",\"qualification\":\"BE\",\"passedYear\":\"2012\",\"certification\":\"Java\",\"companyName\":\"TCS\",\"designation\":\"Developer\",\"dateOfJoining\":\"20/06/2018\",\"yearsOfExp\":\"2\",\"technologyName\":\"java\",\"salary\":\"500000\"}";
 	
 		mockMvc.perform(MockMvcRequestBuilders.post("/createUser")
 				.contentType(MediaType.APPLICATION_JSON).content(requestBody).accept(MediaType.APPLICATION_JSON))
-		        .andExpect(status().isBadRequest())
-		        .andExpect(jsonPath("$.message", "Field validation").exists())
+		        .andExpect(status().isCreated())
+		        .andExpect(jsonPath("$.message", "created successfully").exists())
 		        .andDo(print());
 	}
 	
 	@Test
-	void testDeleteUser() throws Exception {
+	void testHardDeleteUser() throws Exception {
 		
-		mockMvc.perform(MockMvcRequestBuilders.delete("/deleteUser/8")
+		mockMvc.perform(MockMvcRequestBuilders.delete("/hardDeleteUser/8")
 				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isNotFound())
+				.andExpect(status().isOk())
+				.andDo(print());
+	}
+	
+	@Test
+	void testSoftDeleteUser() throws Exception {
+		
+		mockMvc.perform(MockMvcRequestBuilders.delete("/softDeleteUser/10")
+				.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.message", "User status changed to IsActive-N").exists())
 				.andDo(print());
 	}
 	
 	@Test
 	void testUpdateUser() throws Exception {
-		String requestBody = "{\"firstName\":\"Rohit\",\"lastName\":\"Bhosale\",\"gender\":\"Male\",\"age\":\"26\",\"email\":\"rohit@gmail.com\",\"mobile\":\"1234567890\",\"address\":\"vashi\",\"dateOfBirth\":\"1995-03-30\",\"dateOfJoining\":\"2018-07-16\",\"pincode\":\"400001\"}";
+		String requestBody = "{ \"firstName\": \"Yash\", \"lastName\": \"Dixit\", \"gender\": \"Male\", \"age\": \"24\", \"email\": \"yashdixit52@gmail.com\", \"mobile\": \"7021373502\", \"address\": \"Virar\", \"dateOfBirth\": \"30/04/1997\", \"pincode\": \"401303\" }";
 		
-		mockMvc.perform(MockMvcRequestBuilders.put("/updateUser/4")
+		mockMvc.perform(MockMvcRequestBuilders.put("/updateUserDetails/1")
 				.contentType(MediaType.APPLICATION_JSON).content(requestBody).accept(MediaType.APPLICATION_JSON))
 		        .andExpect(status().isOk())
-		        .andExpect(jsonPath("$.firstName", "Rohit").exists())
-		        .andExpect(jsonPath("$.lastName", "Bhosale").exists())
+		        .andExpect(jsonPath("$.firstName", "Yash").exists())
+		        .andExpect(jsonPath("$.lastName", "Dixit").exists())
 		        .andDo(print());
 	}
 	
@@ -87,7 +97,7 @@ public class RestUserControllerTests {
 		mockMvc.perform(MockMvcRequestBuilders.get("/getAllUserByDobSorting")
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.*", hasSize(4)))
+				.andExpect(jsonPath("$.*", hasSize(3)))
 				.andDo(print());
 	}
 	
@@ -97,8 +107,27 @@ public class RestUserControllerTests {
 		mockMvc.perform(MockMvcRequestBuilders.get("/getUserById/1")
 				.accept(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.firstName", "Yash").exists())
-		        .andExpect(jsonPath("$.lastName", "Dixit").exists())
+				.andExpect(jsonPath("$.userName", "imyash30").exists())
+		        .andExpect(jsonPath("$.password", "Imyash30").exists())
+				.andDo(print());
+	}
+	
+	@Test
+	void testgetDetailsByDynamicSearch() throws Exception {
+		String requestBody = "[{\"key\":\"address\",\"value\":\"mumbai\"}]";
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/getDetailsByDynamicSearch")
+				.contentType(MediaType.APPLICATION_JSON).content(requestBody).accept(MediaType.APPLICATION_JSON))
+		        .andExpect(status().isOk())
+		        .andDo(print());
+	}
+	
+	@Test
+	void testGetAllUserByDojSorting() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/getAllUserByDojSorting")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.*", hasSize(2)))
 				.andDo(print());
 	}
 

@@ -40,6 +40,22 @@ public class MTUser extends BaseEntity{
 	@OneToMany(mappedBy = "mtUser", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private List<UserEducation> userEducationList;
+	
+	
+
+	public MTUser(String userName, String password, UserDetails userDetails,
+			UserEmployementDetails userEmployementDetails, List<UserEducation> userEducationList) {
+		super();
+		this.userName = userName;
+		this.password = password;
+		this.userDetails = userDetails;
+		this.userEmployementDetails = userEmployementDetails;
+		this.userEducationList = userEducationList;
+	}
+
+	public MTUser() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public String getUserName() {
 		return userName;

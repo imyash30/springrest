@@ -118,7 +118,7 @@ public class RestUserController {
 	public ResponseEntity<?> softDeleteUser(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException{
 		Map<String,Object> response = new HashMap<>();
 		if(mtUserService.softDeleteUser(userId)) {
-			response.put("message", "User deleted successfully");
+			response.put("message", "User status changed to IsActive-N");
 			logger.info("soft delete method executed");
 			return new ResponseEntity<Map<String,Object>>(response, HttpStatus.OK);
 		}else {
@@ -159,12 +159,11 @@ public class RestUserController {
 		return userList;
 	}
 	
-	@PostMapping("/getDetailsByDynemicSeach")
+	@PostMapping("/getDetailsByDynamicSearch")
 	public List<UserDetails> getDetailsByDynemicSeach(@RequestBody List<SearchDto> searchDtoList){
-		List<UserDetails> userList= mtUserService.getDetailsByDynemicSeach(searchDtoList);
+		List<UserDetails> userList= mtUserService.getDetailsByDynamicSearch(searchDtoList);
 		return userList;
 	}
-	
 	/*@PostMapping("/createUserDetails")
 	public ResponseEntity<?> createUserDetails(@Valid @RequestBody UserDetails user,BindingResult br) {
 		Map<String,Object> response = new HashMap<>();

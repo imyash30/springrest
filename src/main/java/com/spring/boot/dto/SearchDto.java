@@ -4,6 +4,15 @@ public class SearchDto {
 
 	String key;
 	String value;
+	
+	public SearchDto() {
+		super();
+	}
+	public SearchDto(String key, String value) {
+		super();
+		this.key = key;
+		this.value = value;
+	}
 	public String getKey() {
 		return key;
 	}
