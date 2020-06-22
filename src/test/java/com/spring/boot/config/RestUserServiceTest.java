@@ -12,6 +12,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -69,6 +71,10 @@ public class RestUserServiceTest {
     @Before
     public void setUp() throws ParseException {
     	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    	MTUser mtUser = new MTUser();
+    	mtUser.setId(Long.valueOf(1));
+    	mtUser.setUserName("imyash30");
+    	mtUser.setPassword("Imyash30");
     	userDetails = new UserDetails("Yash", "Dixit", "Male", "24", "yashdixit52@gmail.com", "7021373502", "Virar", sdf.parse("30/03/1997"), "401303");
     }
     /*@Test
@@ -136,4 +142,25 @@ public class RestUserServiceTest {
     	assertEquals(userList, actualList);
     }
      
+    @Test
+    public void getAllUserByDobSortingTest() throws ParseException {
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    	
+    	UserDetails user1 = new UserDetails("Yash", "Dixit", "Male", "24", "yashdixit52@gmail.com", "7021373502", "Virar", sdf.parse("30/04/1997"), "401303");
+    	UserDetails user2 = new UserDetails("Pawan", "Shah", "Male", "24", "pawan@gmail.com", "1234567890", "Bhayandar", sdf.parse("07/11/1996"), "400003");
+    	UserDetails user3 = new UserDetails("Vaibhav", "sardar", "Male", "26", "vaibhav@gmail.com", "1234567890", "mumbai", sdf.parse("30/03/1997"), "400003");
+    	
+    	List<UserDetails> userList = Arrays.asList(user1,user2,user3);
+    	Collections.sort(userList,new Comparator<UserDetails>() {
+			@Override
+			public int compare(UserDetails u1, UserDetails u2) {
+				// TODO Auto-generated method stub
+				return u1.getDateOfBirth().compareTo(u2.getDateOfBirth());
+			}
+		});
+    	when(userDetailsDao.findAllByIsActive("Y")).thenReturn(userList);
+    	List<UserDetails> actualList = userService.getAllUserByDobSorting();
+    	assertEquals(userList, actualList);
+    }
+    
 }
