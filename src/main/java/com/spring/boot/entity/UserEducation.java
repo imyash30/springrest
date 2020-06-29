@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "user_education")
 public class UserEducation extends BaseEntity{
@@ -26,6 +28,7 @@ public class UserEducation extends BaseEntity{
 	private String certification;
 	
 	@ManyToOne
+	@JsonBackReference
 	@JoinColumn(name="mt_user_id",referencedColumnName="id")
 	private MTUser mtUser;
 	

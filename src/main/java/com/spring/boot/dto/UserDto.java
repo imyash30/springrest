@@ -1,31 +1,16 @@
 package com.spring.boot.dto;
 
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 public class UserDto {
 	
 	private String id;
-	
 	private String userName;
-	
-	@Pattern(regexp="^(?=.*\\d)(?=.*[A-Z]).{6,8}$",message="Enter min 6 to max 8 character, 1 capital,1 number, No special char.")
 	private String password;
-	
 	private String firstName;
-	
 	private String lastName;
-	
 	private String email;
-	
-	@Size(message="required")
 	private String gender;
-	
 	private String age;
-	
 	private String address;
-	
-	@Size(min=10,max=10,message="10 digits required")
 	private String mobile;
 	private String dateOfBirth;
 	private String pincode;

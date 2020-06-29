@@ -26,14 +26,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.spring.boot.dto.SearchDto;
 import com.spring.boot.dto.UserDetailsDto;
 import com.spring.boot.dto.UserDto;
+import com.spring.boot.dto.UserMasterDto;
 import com.spring.boot.entity.MTUser;
 import com.spring.boot.entity.UserDetails;
 import com.spring.boot.entity.UserEmployementDetails;
 import com.spring.boot.exception.ResourceNotFoundException;
+import com.spring.boot.exception.validateException;
 import com.spring.boot.service.MTUserService;
 
 @RestController
-public class RestUserController {
+public class RestUserController extends AbstractUserClass{
 	
 	private static final Logger logger = LoggerFactory.getLogger(RestUserController.class);
 
@@ -41,8 +43,8 @@ public class RestUserController {
 	@Autowired
 	MTUserService mtUserService;
 	
-	@GetMapping("/getAllUsersDetails")
-	public List<UserDetailsDto> getAllUsers() {
+	@GetMapping("/getAllActiveUser")
+	public List<UserMasterDto> getAllUsers() {
 		logger.info("Fetching all user details");
 		return mtUserService.getAllUsersDetails();
 	}
@@ -51,47 +53,45 @@ public class RestUserController {
 	 * create user and mapping details through dto
 	 */
 	@PostMapping("/createUser")
-	public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto,BindingResult br) throws Exception {
-		Map<String,Object> response = new HashMap<>();
-		if(br.hasErrors()) {
-			List<String> errors = br.getFieldErrors().stream().map(err -> "The field '" + err.getField() +"' "+ err.getDefaultMessage()) .collect(Collectors.toList());   
-		      response.put("Errors",errors);
-		      response.put("message", "Field validation");
-		      logger.info("validation error in creating user");
-		      return new ResponseEntity<Map<String,Object>>(response, HttpStatus.BAD_REQUEST);
-		}else {
-			if(mtUserService.saveUser(userDto)) {
-				response.put("message", "created successfully");
-				logger.info("usre created and all mapping data are also created");
-				return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
-			}	
-			else {
-				response.put("message", "creation failed");
-				logger.info("creation failed");
-				return new ResponseEntity<Map<String,Object>>(response, HttpStatus.NOT_FOUND);
-			}	
-//			response.put("User", savedUser);
-			
+	public ResponseEntity<Object> createUser(@Valid @RequestBody UserDto userDto,BindingResult br) throws validateException {
+		
+		ResponseEntity<Object> responseEntity = null;
+		try {
+			responseEntity = valid(userDto) ? responseBuilder(mtUserService.saveUser(userDto)) : null;
+		} catch (validateException ve) {
+			responseEntity = responseBuilder(ve);
 		}
+		return responseEntity;
 	}
 	
+
 	/*
 	 * Update user details based on user id.
 	 */
 	@PutMapping("/updateUserDetails/{id}")
-	public ResponseEntity<UserDetailsDto> updateUser( @PathVariable(value = "id") Long userId, @Valid @RequestBody UserDetailsDto userDto) throws ResourceNotFoundException, ParseException {
+	public ResponseEntity<?> updateUser( @PathVariable(value = "id") Long userId, @Valid @RequestBody UserDetailsDto userDto,BindingResult br) throws ResourceNotFoundException, ParseException {
 		logger.info("update user details method starts ");
-		final UserDetailsDto updatedUser = mtUserService.updateUserDetails(userId,userDto);
-		return ResponseEntity.ok(updatedUser);
+		Map<String,Object> response = new HashMap<>();
+		if(br.hasErrors()) {
+			List<String> errors = br.getFieldErrors().stream().map(err -> "The field '" + err.getField() +"' "+ err.getDefaultMessage()) .collect(Collectors.toList());   
+		    response.put("Errors",errors);
+		    response.put("message", "Field validation");
+		    logger.info("validation error in update user");
+		    return new ResponseEntity<Map<String,Object>>(response, HttpStatus.BAD_REQUEST);
+		}else {
+			final UserDetailsDto updatedUser = mtUserService.updateUserDetails(userId,userDto);
+			return ResponseEntity.ok(updatedUser);
+		}
 	}
 
 	/*
 	 * Get user by id.
 	 */
 	@GetMapping("/getUserById/{id}")
-	public MTUser getUserById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+	public ResponseEntity<Object> getUserById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
 		logger.info("Fetching user based on id");
-		return mtUserService.getUserById(userId);
+		UserMasterDto userDto = mtUserService.getUserById(userId);
+		return new ResponseEntity<>(userDto,HttpStatus.OK);
 	}
 
 	/*
@@ -132,38 +132,43 @@ public class RestUserController {
 	 * Fetch user details based on parameters.
 	 */
 	@PostMapping("/getUserByNameAndPincode")
-	public List<UserDetails> getUserByNameAndPincode(@RequestParam("firstName")String firstName,
+	public ResponseEntity<Object> getUserByNameAndPincode(@RequestParam("firstName")String firstName,
 			@RequestParam("lastName")String lastName,@RequestParam("pincode")String pincode){
 		logger.info("Fetching user details based on parameters given");
 		List<UserDetails> userList= mtUserService.getUserByNameAndPincode(firstName,lastName,pincode);
-		return userList;
+		return new ResponseEntity<>(userList,HttpStatus.OK);
 	}
 	
 	/*
 	 * Sort user details based on DOB.
 	 */
 	@GetMapping("/getAllUserByDobSorting")
-	public List<UserDetails> getAllUserByDobSorting(){
+	public ResponseEntity<Object> getAllUserByDobSorting(){
 		logger.info("Fetching all user details by sorting dob");
-		List<UserDetails> userList= mtUserService.getAllUserByDobSorting();
-		return userList;
+		List<UserDetailsDto> userList= mtUserService.getAllUserByDobSorting();
+		return new ResponseEntity<>(userList,HttpStatus.OK);
 	}
 
 	/*
 	 * Sort user employement details based on date of joining.
 	 */
 	@GetMapping("/getAllUserByDojSorting")
-	public List<UserEmployementDetails> getAllUserByDojSorting(){
+	public ResponseEntity<Object> getAllUserByDojSorting(){
 		logger.info("Fetching user employement info by sorting doj");
 		List<UserEmployementDetails> userList= mtUserService.getAllUserByDojSorting();
-		return userList;
+		return new ResponseEntity<>(userList,HttpStatus.OK);
 	}
 	
 	@PostMapping("/getDetailsByDynamicSearch")
-	public List<UserDetails> getDetailsByDynemicSeach(@RequestBody List<SearchDto> searchDtoList){
-		List<UserDetails> userList= mtUserService.getDetailsByDynamicSearch(searchDtoList);
-		return userList;
+	public ResponseEntity<Object> getDetailsByDynemicSeach(@RequestBody List<SearchDto> searchDtoList){
+		List<UserDetailsDto> userList= mtUserService.getDetailsByDynamicSearch(searchDtoList);
+		return new ResponseEntity<>(userList,HttpStatus.OK);
 	}
+	
+	/*@PostMapping("/updateUserPassword")
+	public ResponseEntity<?> updateUserPassword()
+		final UserDetailsDto updatedUser = mtUserService.updateUserDetails(userId,userDto);
+		return ResponseEntity.ok(updatedUser);*/
 	/*@PostMapping("/createUserDetails")
 	public ResponseEntity<?> createUserDetails(@Valid @RequestBody UserDetails user,BindingResult br) {
 		Map<String,Object> response = new HashMap<>();

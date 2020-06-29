@@ -10,9 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "mt_user")
@@ -23,22 +25,26 @@ public class MTUser extends BaseEntity{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	@NotBlank(message = "user name is mandatory")
 	@Column(name = "username")
 	private String userName;
 	
 	@Column(name = "password")
 	private String password;
 	
-	@OneToOne(mappedBy = "mtUser", fetch = FetchType.LAZY)
-	@JsonIgnore
+	@OneToOne(mappedBy = "mtUser", fetch = FetchType.EAGER)
+//	@JsonIgnore
+	@JsonManagedReference
 	private UserDetails userDetails;
 	
-	@OneToOne(mappedBy = "mtUser", fetch = FetchType.LAZY)
-	@JsonIgnore
+	@OneToOne(mappedBy = "mtUser", fetch = FetchType.EAGER)
+//	@JsonIgnore
+	@JsonManagedReference
 	private UserEmployementDetails userEmployementDetails;
 	
-	@OneToMany(mappedBy = "mtUser", fetch = FetchType.LAZY)
-	@JsonIgnore
+	@OneToMany(mappedBy = "mtUser", fetch = FetchType.EAGER)
+//	@JsonIgnore
+	@JsonManagedReference
 	private List<UserEducation> userEducationList;
 	
 	

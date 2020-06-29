@@ -12,6 +12,7 @@ import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -45,6 +46,7 @@ public class UserEmployementDetails extends BaseEntity{
 	private double salary;
 	
 	@OneToOne
+	@JsonBackReference
 	@JoinColumn(name="mt_user_id",referencedColumnName="id")
 	private MTUser mtUser;
 	

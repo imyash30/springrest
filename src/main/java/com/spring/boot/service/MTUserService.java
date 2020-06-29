@@ -5,9 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -25,6 +23,7 @@ import com.spring.boot.dao.UserEmployementDao;
 import com.spring.boot.dto.SearchDto;
 import com.spring.boot.dto.UserDetailsDto;
 import com.spring.boot.dto.UserDto;
+import com.spring.boot.dto.UserMasterDto;
 import com.spring.boot.entity.MTUser;
 import com.spring.boot.entity.UserDetails;
 import com.spring.boot.entity.UserEducation;
@@ -52,7 +51,7 @@ public class MTUserService {
 	@Autowired
 	EntityManager entityManager;
 
-	public boolean saveUser(@Valid UserDto userDto) throws Exception {
+	public boolean saveUser(@Valid UserDto userDto) {
 		// TODO Auto-generated method stub
 		
 		try {
@@ -141,7 +140,7 @@ public class MTUserService {
 		}
 	}
 
-	public List<UserDetails> getAllUserByDobSorting() {
+	public List<UserDetailsDto> getAllUserByDobSorting() {
 		// TODO Auto-generated method stub
 		List<UserDetails> userdetailsList = userDetailsDao.findAllByIsActive("Y");
 		
@@ -155,8 +154,8 @@ public class MTUserService {
 			
 		});
 		
-//		List<UserDetailsDto> userDtoList = modelMapper.map(userdetailsList, new TypeToken<List<UserDetailsDto>>() {}.getType());
-		return userdetailsList;
+		List<UserDetailsDto> userDtoList = modelMapper.map(userdetailsList, new TypeToken<List<UserDetailsDto>>() {}.getType());
+		return userDtoList;
 	}
 
 	public List<UserDetails> getUserByNameAndPincode(String firstName, String lastName, String pincode) {
@@ -166,17 +165,20 @@ public class MTUserService {
 		return userList;
 	}
 
-	public MTUser getUserById(Long userId) {
+	public UserMasterDto getUserById(Long userId) {
 		// TODO Auto-generated method stub
-		return mtUserDao.getUserByID(userId);
+		MTUser user = mtUserDao.getUserByID(userId);
+		
+		UserMasterDto userDto = modelMapper.map(user, new TypeToken<UserMasterDto>() {}.getType());
+		return userDto;
 	}
 
-	public List<UserDetailsDto> getAllUsersDetails() {
+	public List<UserMasterDto> getAllUsersDetails() {
 		// TODO Auto-generated method stub
 //		Map<String, Object> userdetails = new HashMap<String, Object>();
 		
-		List<UserDetails> userdetails = userDetailsDao.findAllByIsActive("Y");
-		List<UserDetailsDto> userDtoList = modelMapper.map(userdetails, new TypeToken<List<UserDetailsDto>>() {}.getType());
+		List<MTUser> userList = mtUserDao.findAllByIsActive("Y");
+		List<UserMasterDto> userDtoList = modelMapper.map(userList, new TypeToken<List<UserMasterDto>>() {}.getType());
 		return userDtoList;
 	}
 
@@ -246,7 +248,7 @@ public class MTUserService {
 		return userEmpDetails;
 	}
 
-	public List<UserDetails> getDetailsByDynamicSearch(List<SearchDto> searchDtoList) {
+	public List<UserDetailsDto> getDetailsByDynamicSearch(List<SearchDto> searchDtoList) {
 		// TODO Auto-generated method stub
 		List<UserDetails> userDetailsList = new ArrayList<UserDetails>();
 		StringBuilder sbquery = new StringBuilder();
@@ -269,8 +271,8 @@ public class MTUserService {
 			Query query = entityManager.createNativeQuery(finalQuery,UserDetails.class);
 			userDetailsList.addAll(query.getResultList());
 		}
-		
-		return userDetailsList;
+		List<UserDetailsDto> userDtoList = modelMapper.map(userDetailsList, new TypeToken<List<UserDetailsDto>>() {}.getType());
+		return userDtoList;
 	}
 
 }

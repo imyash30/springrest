@@ -9,10 +9,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -25,22 +29,27 @@ public class UserDetails extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
+	@NotBlank(message = "first name is mandatory")
 	@Column(name = "first_name")
 	private String firstName;
 	
+	@NotBlank(message = "last name is mandatory")
 	@Column(name = "last_name")
 	private String lastName;
 	
+	@NotBlank(message = "gender is mandatory")
 	@Column(name = "gender")
 	private String gender;
 	
+	@NotBlank(message = "age is mandatory")
 	@Column(name = "age")
 	private String age;
 	
+	@NotBlank @Email(message = "Please provide a valid email")
 	@Column(name = "email")
 	private String email;
 	
+	@Size(min=10,max=10,message="10 digits required")
 	@Column(name = "mobile")
 	private String	mobile;
 	
@@ -51,12 +60,15 @@ public class UserDetails extends BaseEntity {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	@Past
 	private Date dateOfBirth;
 	
+	@Size(min=6,max=6,message="6 digits only")
 	@Column(name = "pincode")
 	private String pincode;
 	
 	@OneToOne
+	@JsonBackReference
 	@JoinColumn(name="mt_user_id",referencedColumnName="id")
 	private MTUser mtUser;
 	

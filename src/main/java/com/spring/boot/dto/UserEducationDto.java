@@ -1,4 +1,4 @@
-/*package com.spring.boot.dto;
+package com.spring.boot.dto;
 
 public class UserEducationDto {
 	
@@ -27,4 +27,3 @@ public class UserEducationDto {
 	
 
 }
-*/
